@@ -18,6 +18,19 @@ function main()
     gl.clearColor(1.0,1.0,1.0,1.0);
 // Clear the color buffer with specified clear color
     gl.clear(gl.COLOR_BUFFER_BIT);
+
+    const shaderProgram = InitializeShaderProgram(gl, "VS.glsl", "PS.glsl");
+
+    const programInfo = {
+        program: shaderProgram,
+        attribLocations:{
+            vertexPos: gl.getAttribLocation(shaderProgram, "vPos"),
+        },
+        uniformLocations:{
+            projectionMatrix: gl.getUniformlocation(shaderProgram,"uProjectionMat"),
+            modelViewMatrix : gl.getUniformlocation(shaderProgram, "uModelViewMat"),
+        },
+    };
 }
 
 function InitializeShaderProgram(gl, vsSource, psSource)
@@ -47,4 +60,31 @@ function InitializeShaderProgram(gl, vsSource, psSource)
   }
 
   return ShaderProgram;
+}
+
+function loadShader(gl, type, source)
+{
+    const Shader = gl.createShader(type);
+
+    //Send source to shader object
+
+    gl.shaderSource(Shader, source);
+
+    //Compiles the shader 
+
+    gl.compileShader(Shader);
+
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) 
+    {
+        //The alert uses string interpolations allowing vars to be placed 
+        //right in the string
+        alert(
+            `An error occurred compiling the shaders: ${gl.getShaderInfoLog(Shader)}`,
+        );
+    
+        gl.deleteShader(Shader);
+        return null;
+    }
+
+  return Shader;
 }
