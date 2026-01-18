@@ -31,7 +31,7 @@ class mat4
 
     Scaling(x,y,z)
     {
-        m = this.data;
+       const  m = this.data;
         m[0] = x;
         m[10] = y;
         m[15] = z;

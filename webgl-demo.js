@@ -26,12 +26,11 @@ function main()
         return;
     }
     // Set clear color to black, fully opaque
-    gl.clearColor(0.0,0.0,0.0,0.0);
+    gl.clearColor(0.0,0.0,0.0,1.0);
     // Clear the color buffer with specified clear color
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-
-    vsSource = `
+    const vsSource = `
     attribute vec4 aVertexPosition;
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
@@ -40,7 +39,7 @@ function main()
     }
     `;
       
-    fsSource = `
+   const fsSource = `
     void main() {
       gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
     }
@@ -53,7 +52,7 @@ function main()
     const programInfo = {
         program: shaderProgram,
         attribLocations:{
-            vertexPos: shaderProgram =  gl.getAttribLocation(shaderProgram, "aVertexPosition"),
+            vertexPos: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
         },
         uniformLocations:{
             projectionMatrix: gl.getUniformLocation(shaderProgram,"uProjectionMatrix"),
@@ -68,7 +67,7 @@ function main()
 function InitializeShaderProgram(gl, vsSource, psSource)
 {
     const VertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
-    const PixelShader = loadShader(gl, gl.VERTEX_SHADER, psSource);
+    const PixelShader = loadShader(gl, gl.FRAGMENT_SHADER, psSource);
 
     //Create shader program
 

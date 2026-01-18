@@ -2,43 +2,36 @@
 <html>
 <head>
     <title>Jacober's Website</title>
-</head>
     <link rel="stylesheet" href="stylesheet.css">
-
 <!--The script below pulls in a matrix lib compressed for faster loading 
 and without sending cookies-->
-
+    
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"
-      integrity="sha512-
-      zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
+      integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
       crossorigin="anonymous"
-    defer></script>
-
-    <script src="webgl-demo.js" type="module"></script>
+    defer
+    ></script>
     
+</head>
 <body>
     <div class="page">
         <div class="content">
-            
             <div class="doc">
-                
                 <div class="header">
-                    
                     <div class="nav">
-                       
                         <h1>Jacobers</h1>
-                        <h1><a href="https://github.com/JacobersCom">Github</h1>
-                        <h1><a href="/">Home</h1>
+                        <h1><a href="https://github.com/JacobersCom">Github</a><h1>
+                        <h1><a href="/index.html">Home</a><h1>
                     </div>
                 </div>
 
-                <canvas id="glcanvas" width="400" height="400"></canvas>
-
+                <canvas id="glcanvas" style="width:100%; height:100%;"></canvas>
             </div>
 
         </div>
     </div>
 
+    <script src="webgl-demo.js" type="module"></script>
 </body>
 </html>
