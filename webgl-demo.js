@@ -1,8 +1,19 @@
+import { initBuffers } from "./init-buffers.js";
+import { drawScene } from "./draw-scene.js";
+
 main();
 
 function main()
 {
-    const canvas = document.querySelector("#gl-canvas");
+    const canvas = document.getElementById("glcanvas");
+
+    if(!canvas)
+    {
+        alert(
+            "Unable to create canvas"
+        );
+        return;
+    }
 
     //Initialize the gl context
     const gl = canvas.getContext("webgl");
@@ -19,20 +30,39 @@ function main()
     // Clear the color buffer with specified clear color
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    const shaderProgram = InitializeShaderProgram(gl, "VS.glsl", "PS.glsl");
+
+    vsSource = `
+    attribute vec4 aVertexPosition;
+    uniform mat4 uModelViewMatrix;
+    uniform mat4 uProjectionMatrix;
+    void main() {
+      gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+    }
+    `;
+      
+    fsSource = `
+    void main() {
+      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    }
+    `;
+
+    const shaderProgram = InitializeShaderProgram(gl, vsSource, fsSource);
 
     //Looking up attributes our shader program is using and uniform locations
     //Look up table
     const programInfo = {
         program: shaderProgram,
         attribLocations:{
-            vertexPos: shaderProgram.attribLocations.vPos,
+            vertexPos: shaderProgram =  gl.getAttribLocation(shaderProgram, "aVertexPosition"),
         },
         uniformLocations:{
-            projectionMatrix: shaderProgram.uniformLocations.uProjectionMat,
-            modelViewMatrix : shaderProgram.uniformLocations.uModelViewMat,
-        },
+            projectionMatrix: gl.getUniformLocation(shaderProgram,"uProjectionMatrix"),
+            modelViewMatrix : gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+        }
     };
+
+    const buffer = initBuffers(gl);
+    drawScene(gl, programInfo, buffer);
 }
 
 function InitializeShaderProgram(gl, vsSource, psSource)
@@ -64,29 +94,41 @@ function InitializeShaderProgram(gl, vsSource, psSource)
   return ShaderProgram;
 }
 
+
 function loadShader(gl, type, source)
 {
-    const Shader = gl.createShader(type);
-
+   const Shader = gl.createShader(type);
+    //const source = loadShaderSource(path);
     //Send source to shader object
-
-    gl.shaderSource(Shader, source);
-
-    //Compiles the shader 
-
-    gl.compileShader(Shader);
-
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) 
-    {
-        //The alert uses string interpolations allowing vars to be placed 
-        //right in the string
-        alert(
-            `An error occurred compiling the shaders: ${gl.getShaderInfoLog(Shader)}`,
-        );
     
-        gl.deleteShader(Shader);
-        return null;
+    gl.shaderSource(Shader, source);
+    
+    //Compiles the shader 
+    
+    gl.compileShader(Shader);
+    
+    if (!gl.getShaderParameter(Shader, gl.COMPILE_STATUS)) 
+    {
+            //The alert uses string interpolations allowing vars to be placed 
+            //right in the string
+            alert(
+                `An error occurred compiling the shaders: ${gl.getShaderInfoLog(Shader)}`,
+            );
+            
+            gl.deleteShader(Shader);
+            return null;
     }
-
-  return Shader;
+        
+    return Shader;
+    
+}   
+    
+async function loadShaderSource(path)
+{
+    const response = await fetch(path);
+    if(!response.ok)
+    {
+        throw new Error(`Failed to load shader: ${path}`);
+    }
+    return await response.text();
 }
