@@ -1,12 +1,11 @@
 
 //Read only vars that will pass from the CPU to the GPU
-attribute vec4 vPos;
+attribute vec4 aVertexPosition;
 
-// global var passed from the CPU
-uniform mat4 uModelViewMat; 
-uniform mat4 uProjectionMat;
-
-void main()
+//Passed from the CPU to GPU
+uniform mat4 uModelViewMatrix;
+uniform mat4 uProjectionMatrix;
+void main() 
 {
-    gl_Position = uProjectionMat * uModelViewMat * vPos;
+      gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
 }

@@ -3,7 +3,7 @@ import { drawScene } from "./draw-scene.js";
 
 main();
 
-function main()
+async function main()
 {
     const canvas = document.getElementById("glcanvas");
 
@@ -25,25 +25,12 @@ function main()
         );
         return;
     }
-    // Set clear color to black, fully opaque
-    gl.clearColor(0.0,0.0,0.0,1.0);
-    // Clear the color buffer with specified clear color
-    gl.clear(gl.COLOR_BUFFER_BIT);
+   
 
-    const vsSource = `
-    attribute vec4 aVertexPosition;
-    uniform mat4 uModelViewMatrix;
-    uniform mat4 uProjectionMatrix;
-    void main() {
-      gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-    }
-    `;
-      
-   const fsSource = `
-    void main() {
-      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-    }
-    `;
+    const [vsSource, fsSource] = await Promise.all([
+    loadShaderSource(new URL("./VS.glsl", import.meta.url)),
+    loadShaderSource(new URL("./PS.glsl", import.meta.url)),
+  ]);
 
     const shaderProgram = InitializeShaderProgram(gl, vsSource, fsSource);
 
