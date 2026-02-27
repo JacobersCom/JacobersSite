@@ -25,3 +25,9 @@ a {
     position: relative;
 
 }
+
+.stage
+{
+    flex: 1 1;
+    min-height: 0;
+}

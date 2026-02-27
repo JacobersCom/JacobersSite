@@ -26,14 +26,15 @@ async function main()
         return;
     }
    
-
+    
+    
     const [vsSource, fsSource] = await Promise.all([
-    loadShaderSource(new URL("./VS.glsl", import.meta.url)),
-    loadShaderSource(new URL("./PS.glsl", import.meta.url)),
-  ]);
-
+        loadShaderSource(new URL("./VS.glsl", import.meta.url)),
+        loadShaderSource(new URL("./PS.glsl", import.meta.url)),
+    ]);
+    
     const shaderProgram = InitializeShaderProgram(gl, vsSource, fsSource);
-
+    
     //Looking up attributes our shader program is using and uniform locations
     //Look up table
     const programInfo = {
@@ -46,9 +47,26 @@ async function main()
             modelViewMatrix : gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
         }
     };
-
+    
     const buffer = initBuffers(gl);
-    drawScene(gl, programInfo, buffer);
+    
+    let CubeRot = 0.0;
+    let deltaTime = 0;
+    let then = 0;
+
+    function render(now)
+    {
+        now *= 0.001 // convert to seconds;
+        deltaTime = now - then;
+        then = now;
+
+        drawScene(gl, programInfo, buffer, CubeRot);
+        CubeRot += deltaTime; 
+
+        requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
 }
 
 function InitializeShaderProgram(gl, vsSource, psSource)
